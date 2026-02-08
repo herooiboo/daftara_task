@@ -2,13 +2,13 @@
 
 namespace App\Modules\Warehouse\Application\Services;
 
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\WarehouseNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseRepository;
 
 class DestroyWarehouseService
 {
     public function __construct(
-        protected WarehouseRepository $repository,
+        protected WarehouseRepositoryInterface $repository,
     ) {}
 
     /**

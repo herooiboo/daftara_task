@@ -5,12 +5,12 @@ namespace App\Modules\Warehouse\Application\Services;
 use App\Modules\Warehouse\Application\DTOs\LowStockEventDataDTO;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseInventoryItemRepository;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
 
 class LowStockCheckService
 {
     public function __construct(
-        protected WarehouseInventoryItemRepository $warehouseInventoryItemRepository,
+        protected WarehouseInventoryItemRepositoryInterface $warehouseInventoryItemRepository,
     ) {}
 
     public function checkLowStock(

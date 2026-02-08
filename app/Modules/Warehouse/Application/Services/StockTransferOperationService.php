@@ -6,13 +6,13 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasAmount;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasUserId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\InsufficientStockException;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseInventoryItemRepository;
 
 class StockTransferOperationService
 {
     public function __construct(
-        protected WarehouseInventoryItemRepository $warehouseInventoryItemRepository,
+        protected WarehouseInventoryItemRepositoryInterface $warehouseInventoryItemRepository,
     ) {}
 
 

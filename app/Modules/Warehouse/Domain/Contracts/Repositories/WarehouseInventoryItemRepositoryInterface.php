@@ -14,7 +14,6 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMin;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasSku;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasUserId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
-use Illuminate\Database\Eloquent\Model;
 
 interface WarehouseInventoryItemRepositoryInterface
 {
@@ -22,28 +21,28 @@ interface WarehouseInventoryItemRepositoryInterface
 
     public function findByWarehouseAndInventory(
         HasWarehouseId&HasInventoryId $data
-    ): ?Model;
+    ): ?object;
 
     public function validateStockAvailability(
         HasWarehouseId&HasInventoryId&HasAmount $data
-    ): Model;
+    ): object;
 
     public function deductStock(
         HasId&HasAmount&HasUserId $data
-    ): Model;
+    ): object;
 
     public function addStockToTarget(
         HasWarehouseId&HasInventoryId&HasAmount&HasUserId $data,
         float                                             $lowStockThreshold
-    ): Model;
+    ): object;
 
     public function updateStock(
         HasToUpdateArray&HasId $data
-    ): Model;
+    ): object;
 
     public function createWarehouseInventoryItem(
         HasToCreateArray $data
-    ): Model;
+    ): object;
 
     public function getAllInventoryQuery(): mixed;
 

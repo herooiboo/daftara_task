@@ -3,15 +3,15 @@
 namespace App\Modules\Auth\Application\Services;
 
 use App\Modules\Auth\Application\DTOs\LoginResponseDTO;
+use App\Modules\Auth\Domain\Contracts\Repositories\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Exceptions\InvalidCredentialsException;
-use App\Modules\Auth\Infrastructure\Repositories\UserRepository;
 use App\Modules\Auth\Presentation\DTOs\LoginDTO;
 use Illuminate\Support\Facades\Hash;
 
 class LoginService
 {
     public function __construct(
-        protected UserRepository $userRepository,
+        protected UserRepositoryInterface $userRepository,
     ) {}
 
     /**
@@ -19,13 +19,22 @@ class LoginService
      */
     public function handle(LoginDTO $dto): LoginResponseDTO
     {
-        $user = $this->userRepository->findByEmail($dto->email);
+        /** @var \App\Modules\Auth\Infrastructure\Models\User|null $userModel */
+        $userModel = $this->userRepository->findByEmail($dto->email);
 
-        if (! $user || ! Hash::check($dto->password, $user->password)) {
+        if (! $userModel || ! Hash::check($dto->password, $userModel->password)) {
             throw new InvalidCredentialsException();
         }
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        $token = $userModel->createToken('auth-token')->plainTextToken;
+
+        // Convert to domain entity
+        $user = \App\Modules\Auth\Domain\Entities\User::fromArray([
+            'id' => $userModel->id,
+            'name' => $userModel->name,
+            'email' => $userModel->email,
+            'preferences' => $userModel->preferences,
+        ]);
 
         return new LoginResponseDTO(
             user: $user,

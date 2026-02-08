@@ -7,11 +7,10 @@ use App\Domain\Contracts\HasToCreateArray;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasBaseWarehouseId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasTargetWarehouseId;
-use Illuminate\Database\Eloquent\Model;
 
 interface StockTransferRepositoryInterface
 {
-    public function createStockTransfer(HasToCreateArray $data): Model;
+    public function createStockTransfer(HasToCreateArray $data): object;
 
     public function getAllStockTransfers(
         HasBaseWarehouseId&HasTargetWarehouseId&HasInventoryId&HasPagination $filter

@@ -17,7 +17,6 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMin;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasSku;
 use App\Modules\Warehouse\Domain\Contracts\Repositories\InventoryItemRepositoryInterface;
 use App\Modules\Warehouse\Infrastructure\Models\InventoryItem;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class InventoryItemRepository extends BaseRepository implements InventoryItemRepositoryInterface
@@ -27,7 +26,7 @@ class InventoryItemRepository extends BaseRepository implements InventoryItemRep
         parent::__construct($model);
     }
 
-    public function findById(int $id): ?InventoryItem
+    public function findById(int $id): ?object
     {
         return $this->model->query()->find($id);
     }
@@ -49,12 +48,12 @@ class InventoryItemRepository extends BaseRepository implements InventoryItemRep
         ])->paginate($filter->getPerPage());
     }
 
-    public function createInventoryItem(HasToCreateArray $data): InventoryItem
+    public function createInventoryItem(HasToCreateArray $data): object
     {
         return $this->model->query()->create($data->toCreateArray());
     }
 
-    public function updateInventoryItem(HasToUpdateArray&HasId $data): ?InventoryItem
+    public function updateInventoryItem(HasToUpdateArray&HasId $data): ?object
     {
         $item = $this->model->query()->find($data->getId());
         if (!$item) {

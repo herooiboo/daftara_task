@@ -5,6 +5,10 @@ namespace App\Modules\Warehouse\Presentation\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Resource for StockTransfer Eloquent models.
+ * Use StockTransferEntityResource for domain entities.
+ */
 class StockTransferResource extends JsonResource
 {
     public function toArray(Request $request): array

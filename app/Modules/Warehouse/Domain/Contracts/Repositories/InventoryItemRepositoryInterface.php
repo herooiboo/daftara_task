@@ -10,19 +10,18 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasName;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMax;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMin;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasSku;
-use Illuminate\Database\Eloquent\Model;
 
 interface InventoryItemRepositoryInterface
 {
-    public function findById(int $id): ?Model;
+    public function findById(int $id): ?object;
 
     public function getAll(): mixed;
 
     public function getAllInventoryItems(HasName&HasSku&HasPriceMin&HasPriceMax&HasPagination $filter): mixed;
 
-    public function createInventoryItem(HasToCreateArray $data): Model;
+    public function createInventoryItem(HasToCreateArray $data): object;
 
-    public function updateInventoryItem(HasToUpdateArray&HasId $data): ?Model;
+    public function updateInventoryItem(HasToUpdateArray&HasId $data): ?object;
 
     public function delete(int $id): bool;
 }

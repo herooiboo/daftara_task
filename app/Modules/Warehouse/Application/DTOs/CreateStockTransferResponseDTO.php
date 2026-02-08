@@ -2,7 +2,7 @@
 
 namespace App\Modules\Warehouse\Application\DTOs;
 
-use App\Modules\Warehouse\Infrastructure\Models\StockTransfer;
+use App\Modules\Warehouse\Domain\Entities\StockTransfer;
 
 readonly class CreateStockTransferResponseDTO
 {
@@ -12,3 +12,4 @@ readonly class CreateStockTransferResponseDTO
         public ?LowStockEventDataDTO $lowStockEventData = null,
     ) {}
 }
+

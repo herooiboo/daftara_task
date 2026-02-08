@@ -2,13 +2,11 @@
 
 namespace App\Modules\Warehouse\Domain\Contracts\Observers;
 
-use App\Modules\Warehouse\Infrastructure\Models\WarehouseInventoryItem;
-
 interface WarehouseInventoryItemObserverInterface
 {
-    public function updated(WarehouseInventoryItem $item): void;
+    public function updated(object $item): void;
 
-    public function created(WarehouseInventoryItem $item): void;
+    public function created(object $item): void;
 
-    public function deleted(WarehouseInventoryItem $item): void;
+    public function deleted(object $item): void;
 }

@@ -13,7 +13,6 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasTargetWarehouseId;
 use App\Modules\Warehouse\Domain\Contracts\Repositories\StockTransferRepositoryInterface;
 use App\Modules\Warehouse\Infrastructure\Models\StockTransfer;
-use Illuminate\Database\Eloquent\Model;
 
 class StockTransferRepository extends BaseRepository implements StockTransferRepositoryInterface
 {
@@ -22,7 +21,7 @@ class StockTransferRepository extends BaseRepository implements StockTransferRep
         parent::__construct($model);
     }
 
-    public function createStockTransfer(HasToCreateArray $data): Model
+    public function createStockTransfer(HasToCreateArray $data): object
     {
         return $this->model->query()->create($data->toCreateArray());
     }
@@ -42,4 +41,3 @@ class StockTransferRepository extends BaseRepository implements StockTransferRep
             ->paginate($filter->getPerPage());
     }
 }
-

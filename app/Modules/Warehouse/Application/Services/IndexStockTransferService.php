@@ -6,12 +6,12 @@ use App\Domain\Contracts\HasPagination;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasBaseWarehouseId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasTargetWarehouseId;
-use App\Modules\Warehouse\Infrastructure\Repositories\StockTransferRepository;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\StockTransferRepositoryInterface;
 
 class IndexStockTransferService
 {
     public function __construct(
-        protected StockTransferRepository $repository,
+        protected StockTransferRepositoryInterface $repository,
     ) {}
 
     public function handle(

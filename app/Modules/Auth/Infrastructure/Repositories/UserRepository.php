@@ -13,12 +13,12 @@ class UserRepository extends Repository implements UserRepositoryInterface
         parent::__construct($model);
     }
 
-    public function findById(int $id): ?User
+    public function findById(int $id): ?object
     {
         return $this->model->query()->find($id);
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByEmail(string $email): ?object
     {
         return $this->model->query()->where('email', $email)->first();
     }

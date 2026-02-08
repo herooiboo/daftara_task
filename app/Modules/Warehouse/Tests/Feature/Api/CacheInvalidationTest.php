@@ -99,8 +99,8 @@ class CacheInvalidationTest extends TestCase
         ]);
 
         // Populate caches
-        $this->getJson("/api/warehouses/{$baseWarehouse->id}/inventory");
-        $this->getJson("/api/warehouses/{$targetWarehouse->id}/inventory");
+        $this->getJson("/api/v1/warehouse/warehouses/{$baseWarehouse->id}/inventory");
+        $this->getJson("/api/v1/warehouse/warehouses/{$targetWarehouse->id}/inventory");
 
         $this->assertTrue(Cache::has("warehouse_{$baseWarehouse->id}_inventory"));
         $this->assertTrue(Cache::has("warehouse_{$targetWarehouse->id}_inventory"));

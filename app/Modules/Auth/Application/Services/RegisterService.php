@@ -2,22 +2,24 @@
 
 namespace App\Modules\Auth\Application\Services;
 
+use App\Modules\Auth\Domain\Contracts\Repositories\UserRepositoryInterface;
+use App\Modules\Auth\Domain\Contracts\Services\RoleServiceInterface;
 use App\Modules\Auth\Domain\Exceptions\UserAlreadyExistsException;
-use App\Modules\Auth\Infrastructure\Models\User;
-use App\Modules\Auth\Infrastructure\Repositories\UserRepository;
 use App\Modules\Auth\Presentation\DTOs\RegisterDTO;
-use Spatie\Permission\Models\Role;
 
 class RegisterService
 {
-    public function __construct(
-        protected UserRepository $userRepository,
-    ) {}
+    public function __construct(protected
+        UserRepositoryInterface $userRepository, protected
+        RoleServiceInterface $roleService,
+        )
+    {
+    }
 
     /**
      * @throws UserAlreadyExistsException
      */
-    public function handle(RegisterDTO $dto): User
+    public function handle(RegisterDTO $dto): object
     {
         $existing = $this->userRepository->findByEmail($dto->email);
 
@@ -32,9 +34,9 @@ class RegisterService
             'preferences' => ['notification_channel' => 'email'],
         ]);
 
-        $staffRole = Role::findByName('staff', 'api');
+        $staffRole = $this->roleService->findByName('staff', 'api');
         if ($staffRole) {
-            $user->assignRole($staffRole);
+            $this->roleService->assignToUser($user, $staffRole);
         }
 
         return $user;

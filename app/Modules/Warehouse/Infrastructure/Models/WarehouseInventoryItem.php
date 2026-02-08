@@ -3,6 +3,7 @@
 namespace App\Modules\Warehouse\Infrastructure\Models;
 
 use App\Modules\Auth\Infrastructure\Models\User;
+use App\Modules\Warehouse\Domain\Contracts\HasStockSource;
 use App\Modules\Warehouse\Infrastructure\Factories\WarehouseInventoryItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,13 +24,13 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Modules\Warehouse\Infrastructure\Models\InventoryItem $inventoryItem
  * @property-read \App\Modules\Auth\Infrastructure\Models\User $lastUpdatedBy
  */
-class WarehouseInventoryItem extends Model
+class WarehouseInventoryItem extends Model implements HasStockSource
 {
     use HasFactory, LogsActivity;
 
     protected static function newFactory()
     {
-        return WarehouseInventoryItemFactory::new();
+        return WarehouseInventoryItemFactory::new ();
     }
 
     protected $fillable = [
@@ -55,12 +56,12 @@ class WarehouseInventoryItem extends Model
 
     public function inventoryItem(): BelongsTo
     {
-        return $this->belongsTo(InventoryItem::class, 'inventory_id');
+        return $this->belongsTo(InventoryItem::class , 'inventory_id');
     }
 
     public function lastUpdatedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'last_updated_by');
+        return $this->belongsTo(User::class , 'last_updated_by');
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -68,5 +69,21 @@ class WarehouseInventoryItem extends Model
         return LogOptions::defaults()
             ->logOnly(['stock', 'low_stock_threshold'])
             ->logOnlyDirty();
+    }
+
+    // HasStockSource interface implementation
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getWarehouseId(): int
+    {
+        return $this->warehouse_id;
+    }
+
+    public function getInventoryId(): int
+    {
+        return $this->inventory_id;
     }
 }

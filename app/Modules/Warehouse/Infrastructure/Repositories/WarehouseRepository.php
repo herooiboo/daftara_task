@@ -13,7 +13,6 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasLocation;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasName;
 use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use App\Modules\Warehouse\Infrastructure\Models\Warehouse;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class WarehouseRepository extends BaseRepository implements WarehouseRepositoryInterface
@@ -23,7 +22,7 @@ class WarehouseRepository extends BaseRepository implements WarehouseRepositoryI
         parent::__construct($model);
     }
 
-    public function findById(int $id): ?Model
+    public function findById(int $id): ?object
     {
         return $this->model->query()->find($id);
     }
@@ -43,12 +42,12 @@ class WarehouseRepository extends BaseRepository implements WarehouseRepositoryI
         ])->paginate($filter->getPerPage());
     }
 
-    public function createWarehouse(HasToCreateArray $data): Model
+    public function createWarehouse(HasToCreateArray $data): object
     {
         return $this->model->query()->create($data->toCreateArray());
     }
 
-    public function updateWarehouse(HasToUpdateArray&HasId $data): ?Model
+    public function updateWarehouse(HasToUpdateArray&HasId $data): ?object
     {
         $warehouse = $this->model->query()->find($data->getId());
         if (!$warehouse) {

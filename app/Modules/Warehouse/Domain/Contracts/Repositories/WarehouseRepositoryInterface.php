@@ -8,19 +8,18 @@ use App\Domain\Contracts\HasToUpdateArray;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasLocation;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasName;
-use Illuminate\Database\Eloquent\Model;
 
 interface WarehouseRepositoryInterface
 {
-    public function findById(int $id): ?Model;
+    public function findById(int $id): ?object;
 
     public function getAll(): mixed;
 
     public function getAllWarehouses(HasName&HasLocation&HasPagination $filter): mixed;
 
-    public function createWarehouse(HasToCreateArray $data): Model;
+    public function createWarehouse(HasToCreateArray $data): object;
 
-    public function updateWarehouse(HasToUpdateArray&HasId $data): ?Model;
+    public function updateWarehouse(HasToUpdateArray&HasId $data): ?object;
 
     public function delete(int $id): bool;
 }

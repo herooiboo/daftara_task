@@ -7,7 +7,6 @@ use App\Modules\Notifications\Domain\Contracts\Repositories\WarehouseNotificatio
 use App\Modules\Notifications\Infrastructure\Models\WarehouseNotificationSubscription;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
 use Dust\Base\Repository;
-use Illuminate\Support\Collection;
 
 class WarehouseNotificationSubscriptionRepository extends Repository implements WarehouseNotificationSubscriptionRepositoryInterface
 {
@@ -16,19 +15,33 @@ class WarehouseNotificationSubscriptionRepository extends Repository implements 
         parent::__construct($model);
     }
 
-    public function getByWarehouseId(int $warehouseId): Collection
+    public function getByWarehouseId(int $warehouseId): array
     {
-        return $this->model->query()
+        $subscriptions = $this->model->query()
             ->where('warehouse_id', $warehouseId)
             ->with('user')
             ->get();
+
+        return $subscriptions->map(function ($subscription) {
+            return \App\Modules\Notifications\Domain\Entities\WarehouseNotificationSubscription::fromArray([
+                'id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'warehouse_id' => $subscription->warehouse_id,
+            ]);
+        })->toArray();
     }
 
-    public function subscribe(int $userId, int $warehouseId): WarehouseNotificationSubscription
+    public function subscribe(int $userId, int $warehouseId): \App\Modules\Notifications\Domain\Entities\WarehouseNotificationSubscription
     {
-        return $this->model->query()->create([
+        $subscription = $this->model->query()->create([
             'user_id' => $userId,
             'warehouse_id' => $warehouseId,
+        ]);
+
+        return \App\Modules\Notifications\Domain\Entities\WarehouseNotificationSubscription::fromArray([
+            'id' => $subscription->id,
+            'user_id' => $subscription->user_id,
+            'warehouse_id' => $subscription->warehouse_id,
         ]);
     }
 
@@ -48,11 +61,11 @@ class WarehouseNotificationSubscriptionRepository extends Repository implements 
             ->exists();
     }
 
-    public function subscribeMultiple(HasWarehouseId&HasUserIds $data): Collection
+    public function subscribeMultiple(HasWarehouseId&HasUserIds $data): array
     {
         $userIds = $data->getUserIds();
         $warehouseId = $data->getWarehouseId();
-        
+
         $subscriptionsData = array_map(function ($userId) use ($warehouseId) {
             return [
                 'user_id' => $userId,
@@ -61,13 +74,21 @@ class WarehouseNotificationSubscriptionRepository extends Repository implements 
                 'updated_at' => now(),
             ];
         }, $userIds);
-        
+
         $this->model->query()->insertOrIgnore($subscriptionsData);
-        
-        return $this->model->query()
+
+        $subscriptions = $this->model->query()
             ->where('warehouse_id', $warehouseId)
             ->whereIn('user_id', $userIds)
             ->get();
+
+        return $subscriptions->map(function ($subscription) {
+            return \App\Modules\Notifications\Domain\Entities\WarehouseNotificationSubscription::fromArray([
+                'id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'warehouse_id' => $subscription->warehouse_id,
+            ]);
+        })->toArray();
     }
 
     public function unsubscribeMultiple(HasWarehouseId&HasUserIds $data): int

@@ -3,20 +3,19 @@
 namespace App\Modules\Warehouse\Application\Services;
 
 use App\Modules\Warehouse\Application\DTOs\UpdateInventoryItemDTO;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\InventoryItemRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\InventoryItemNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\InventoryItemRepository;
-use Illuminate\Database\Eloquent\Model;
 
 class UpdateInventoryItemService
 {
     public function __construct(
-        protected InventoryItemRepository $repository,
+        protected InventoryItemRepositoryInterface $repository,
     ) {}
 
     /**
      * @throws InventoryItemNotFoundException
      */
-    public function handle(UpdateInventoryItemDTO $dto): Model
+    public function handle(UpdateInventoryItemDTO $dto): object
     {
         $item = $this->repository->updateInventoryItem($dto);
 

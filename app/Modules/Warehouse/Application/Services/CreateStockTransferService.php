@@ -6,8 +6,8 @@ use App\Modules\Warehouse\Application\DTOs\AddStockToTargetDTO;
 use App\Modules\Warehouse\Application\DTOs\CreateStockTransferDTO;
 use App\Modules\Warehouse\Application\DTOs\CreateStockTransferResponseDTO;
 use App\Modules\Warehouse\Application\DTOs\DeductStockDTO;
-use App\Modules\Warehouse\Infrastructure\Repositories\StockTransferRepository;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseInventoryItemRepository;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\StockTransferRepositoryInterface;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class CreateStockTransferService
@@ -15,8 +15,8 @@ class CreateStockTransferService
     public function __construct(
         protected StockTransferOperationService $stockTransferOperationService,
         protected LowStockCheckService $lowStockCheckService,
-        protected StockTransferRepository $stockTransferRepository,
-        protected WarehouseInventoryItemRepository $warehouseInventoryItemRepository,
+        protected StockTransferRepositoryInterface $stockTransferRepository,
+        protected WarehouseInventoryItemRepositoryInterface $warehouseInventoryItemRepository,
     ) {}
 
     public function handle(CreateStockTransferDTO $dto): CreateStockTransferResponseDTO
@@ -38,8 +38,20 @@ class CreateStockTransferService
                 userId: $dto->createdBy,
             ), $sourceStock->low_stock_threshold);
 
-            $transfer = $this->stockTransferRepository->createStockTransfer($dto);
-            $transfer->load(['inventoryItem', 'baseWarehouse', 'targetWarehouse', 'creator']);
+            /** @var \App\Modules\Warehouse\Infrastructure\Models\StockTransfer $transferModel */
+            $transferModel = $this->stockTransferRepository->createStockTransfer($dto);
+            $transferModel->load(['inventoryItem', 'baseWarehouse', 'targetWarehouse', 'creator']);
+
+            // Convert to domain entity
+            $transfer = \App\Modules\Warehouse\Domain\Entities\StockTransfer::fromArray([
+                'id' => $transferModel->id,
+                'inventory_id' => $transferModel->inventory_id,
+                'source_warehouse_id' => $transferModel->base_warehouse_id,
+                'destination_warehouse_id' => $transferModel->target_warehouse_id,
+                'quantity' => (float) $transferModel->amount,
+                'performed_by' => $transferModel->created_by,
+                'created_at' => $transferModel->created_at,
+            ]);
 
             $lowStockEventData = $this->lowStockCheckService->checkLowStock($dto);
 

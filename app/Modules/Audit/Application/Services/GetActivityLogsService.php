@@ -7,12 +7,12 @@ use App\Modules\Audit\Domain\Contracts\Filters\HasDateFrom;
 use App\Modules\Audit\Domain\Contracts\Filters\HasDateTo;
 use App\Modules\Audit\Domain\Contracts\Filters\HasEvent;
 use App\Modules\Audit\Domain\Contracts\Filters\HasSubjectType;
-use App\Modules\Audit\Infrastructure\Repositories\ActivityLogRepository;
+use App\Modules\Audit\Domain\Contracts\Repositories\ActivityLogRepositoryInterface;
 
 class GetActivityLogsService
 {
     public function __construct(
-        protected ActivityLogRepository $repository,
+        protected ActivityLogRepositoryInterface $repository,
     ) {}
 
     public function handle(

@@ -4,7 +4,7 @@ namespace App\Modules\Auth\Presentation\Responses\Api;
 
 use App\Modules\Auth\Application\DTOs\LoginResponseDTO;
 use App\Modules\Auth\Domain\Exceptions\InvalidCredentialsException;
-use App\Modules\Auth\Presentation\Resources\UserResource;
+use App\Modules\Auth\Presentation\Resources\UserEntityResource;
 use Dust\Base\Response;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -21,7 +21,7 @@ class LoginResponse extends Response
             'success' => true,
             'message' => 'Login successful.',
             'data' => [
-                'user' => new UserResource($resource->getUser()),
+                'user' => new UserEntityResource($resource->getUser()),
                 'token' => $resource->getToken(),
             ],
         ], SymfonyResponse::HTTP_OK);

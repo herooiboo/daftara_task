@@ -8,17 +8,17 @@ use Illuminate\Support\Facades\Cache;
 
 class WarehouseInventoryItemObserver implements WarehouseInventoryItemObserverInterface
 {
-    public function created(WarehouseInventoryItem $item): void
+    public function created(object $item): void
     {
         $this->invalidateCache($item);
     }
 
-    public function updated(WarehouseInventoryItem $item): void
+    public function updated(object $item): void
     {
         $this->invalidateCache($item);
     }
 
-    public function deleted(WarehouseInventoryItem $item): void
+    public function deleted(object $item): void
     {
         $this->invalidateCache($item);
     }

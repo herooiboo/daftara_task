@@ -3,14 +3,14 @@
 namespace App\Modules\Notifications\Infrastructure\Listeners;
 
 use App\Modules\Auth\Infrastructure\Models\User;
+use App\Modules\Notifications\Domain\Contracts\Repositories\NotificationChannelRepositoryInterface;
+use App\Modules\Notifications\Domain\Contracts\Repositories\NotificationReceiverRepositoryInterface;
+use App\Modules\Notifications\Domain\Contracts\Repositories\NotificationRepositoryInterface;
+use App\Modules\Notifications\Domain\Contracts\Repositories\WarehouseNotificationSubscriptionRepositoryInterface;
 use App\Modules\Notifications\Infrastructure\Events\LowStockDetected;
 use App\Modules\Notifications\Infrastructure\Notifications\LowStockNotification;
-use App\Modules\Notifications\Infrastructure\Repositories\NotificationChannelRepository;
-use App\Modules\Notifications\Infrastructure\Repositories\NotificationReceiverRepository;
-use App\Modules\Notifications\Infrastructure\Repositories\NotificationRepository;
-use App\Modules\Notifications\Infrastructure\Repositories\WarehouseNotificationSubscriptionRepository;
-use App\Modules\Warehouse\Infrastructure\Repositories\InventoryItemRepository;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseRepository;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\InventoryItemRepositoryInterface;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Notification;
 class SendLowStockNotification implements ShouldQueue
 {
     public function __construct(
-        protected WarehouseNotificationSubscriptionRepository $warehouseNotificationSubscriptionRepository,
-        protected NotificationRepository $notificationRepository,
-        protected NotificationReceiverRepository $notificationReceiverRepository,
-        protected NotificationChannelRepository $notificationChannelRepository,
-        protected WarehouseRepository $warehouseRepository,
-        protected InventoryItemRepository $inventoryItemRepository,
+        protected WarehouseNotificationSubscriptionRepositoryInterface $warehouseNotificationSubscriptionRepository,
+        protected NotificationRepositoryInterface $notificationRepository,
+        protected NotificationReceiverRepositoryInterface $notificationReceiverRepository,
+        protected NotificationChannelRepositoryInterface $notificationChannelRepository,
+        protected WarehouseRepositoryInterface $warehouseRepository,
+        protected InventoryItemRepositoryInterface $inventoryItemRepository,
     ) {}
 
     public function handle(LowStockDetected $event): void
@@ -45,19 +45,20 @@ class SendLowStockNotification implements ShouldQueue
 
         $subscribers = $this->warehouseNotificationSubscriptionRepository->getByWarehouseId($event->getWarehouseId());
 
+        $userIds = array_map(fn ($subscription) => $subscription->userId, $subscribers);
+        $users = User::whereIn('id', $userIds)->get();
+
         foreach ($subscribers as $subscription) {
             $this->notificationReceiverRepository->create([
                 'notifiable_type' => User::class,
-                'notifiable_id' => $subscription->user_id,
+                'notifiable_id' => $subscription->userId,
                 'notification_id' => $notification->id,
                 'status' => 'sent',
                 'sent_at' => now(),
             ]);
         }
 
-        Log::info("Low stock notification sent for item '{$item->name}' in warehouse '{$warehouse->name}' to " . $subscribers->count() . " subscribers.");
-
-        $users = $subscribers->map(fn ($subscription) => $subscription->user)->filter()->unique('id');
+        Log::info("Low stock notification sent for item '{$item->name}' in warehouse '{$warehouse->name}' to " . count($subscribers) . " subscribers.");
 
         if ($users->isNotEmpty()) {
             Notification::send(

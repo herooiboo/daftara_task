@@ -3,14 +3,15 @@
 namespace App\Modules\Notifications\Domain\Contracts\Repositories;
 
 use App\Modules\Notifications\Domain\Contracts\Filters\HasUserIds;
-use App\Modules\Notifications\Infrastructure\Models\WarehouseNotificationSubscription;
+use App\Modules\Notifications\Domain\Entities\WarehouseNotificationSubscription;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 interface WarehouseNotificationSubscriptionRepositoryInterface
 {
-    public function getByWarehouseId(int $warehouseId): Collection;
+    /**
+     * @return WarehouseNotificationSubscription[]
+     */
+    public function getByWarehouseId(int $warehouseId): array;
 
     public function subscribe(int $userId, int $warehouseId): WarehouseNotificationSubscription;
 
@@ -18,7 +19,10 @@ interface WarehouseNotificationSubscriptionRepositoryInterface
 
     public function isSubscribed(int $userId, int $warehouseId): bool;
 
-    public function subscribeMultiple(HasWarehouseId&HasUserIds $data): Collection;
+    /**
+     * @return WarehouseNotificationSubscription[]
+     */
+    public function subscribeMultiple(HasWarehouseId&HasUserIds $data): array;
 
     public function unsubscribeMultiple(HasWarehouseId&HasUserIds $data): int;
 }

@@ -2,13 +2,13 @@
 
 namespace App\Modules\Warehouse\Application\Services;
 
+use App\Modules\Warehouse\Domain\Contracts\Repositories\InventoryItemRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\InventoryItemNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\InventoryItemRepository;
 
 class DestroyInventoryItemService
 {
     public function __construct(
-        protected InventoryItemRepository $repository,
+        protected InventoryItemRepositoryInterface $repository,
     ) {}
 
     /**

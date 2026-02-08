@@ -2,7 +2,7 @@
 
 namespace App\Modules\Auth\Application\DTOs;
 
-use App\Modules\Auth\Infrastructure\Models\User;
+use App\Modules\Auth\Domain\Entities\User;
 
 readonly class LoginResponseDTO
 {
@@ -21,3 +21,4 @@ readonly class LoginResponseDTO
         return $this->token;
     }
 }
+

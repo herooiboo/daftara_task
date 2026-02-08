@@ -29,7 +29,6 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
 use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\InsufficientStockException;
 use App\Modules\Warehouse\Infrastructure\Models\WarehouseInventoryItem;
-use Illuminate\Database\Eloquent\Model;
 
 class WarehouseInventoryItemRepository extends BaseRepository implements WarehouseInventoryItemRepositoryInterface
 {
@@ -48,7 +47,7 @@ class WarehouseInventoryItemRepository extends BaseRepository implements Warehou
 
     public function findByWarehouseAndInventory(
         HasWarehouseId&HasInventoryId $data
-    ): ?Model
+    ): ?object
     {
         return $this->model->query()
             ->where('warehouse_id', $data->getWarehouseId())
@@ -61,7 +60,7 @@ class WarehouseInventoryItemRepository extends BaseRepository implements Warehou
      */
     public function validateStockAvailability(
         HasWarehouseId&HasInventoryId&HasAmount $data
-    ): Model
+    ): object
     {
         $sourceStock = $this->findByWarehouseAndInventory($data);
 
@@ -74,10 +73,10 @@ class WarehouseInventoryItemRepository extends BaseRepository implements Warehou
 
     public function deductStock(
         HasId&HasAmount&HasUserId $data
-    ): Model
+    ): object
     {
         $item = $this->model->query()->findOrFail($data->getId());
-        
+
         return $this->updateStock(new UpdateStockDTO(
             id: $item->id,
             stock: $item->stock - $data->getAmount(),
@@ -88,7 +87,7 @@ class WarehouseInventoryItemRepository extends BaseRepository implements Warehou
     public function addStockToTarget(
         HasWarehouseId&HasInventoryId&HasAmount&HasUserId $data,
         float                                             $lowStockThreshold
-    ): Model
+    ): object
     {
         $targetStock = $this->findByWarehouseAndInventory($data);
 
@@ -111,14 +110,14 @@ class WarehouseInventoryItemRepository extends BaseRepository implements Warehou
 
     public function createWarehouseInventoryItem(
         HasToCreateArray $data
-    ): Model
+    ): object
     {
         return $this->model->query()->create($data->toCreateArray());
     }
 
     public function updateStock(
         HasToUpdateArray&HasId $data
-    ): Model
+    ): object
     {
         $item = $this->model->query()->findOrFail($data->getId());
         $item->update($data->toUpdateArray());

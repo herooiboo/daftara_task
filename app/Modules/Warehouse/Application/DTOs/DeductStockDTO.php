@@ -7,19 +7,19 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasInventoryId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasUserId;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Warehouse\Domain\Contracts\HasStockSource;
 
 readonly class DeductStockDTO implements HasId, HasAmount, HasUserId, HasWarehouseId, HasInventoryId
 {
     public function __construct(
-        public Model $sourceStock,
+        public HasStockSource $sourceStock,
         public float $amount,
         public int   $userId,
     ) {}
 
     public function getId(): int
     {
-        return $this->sourceStock->id;
+        return $this->sourceStock->getId();
     }
 
     public function getAmount(): float
@@ -34,11 +34,12 @@ readonly class DeductStockDTO implements HasId, HasAmount, HasUserId, HasWarehou
 
     public function getWarehouseId(): ?int
     {
-        return $this->sourceStock->warehouse_id;
+        return $this->sourceStock->getWarehouseId();
     }
 
     public function getInventoryId(): int
     {
-        return $this->sourceStock->inventory_id;
+        return $this->sourceStock->getInventoryId();
     }
 }
+

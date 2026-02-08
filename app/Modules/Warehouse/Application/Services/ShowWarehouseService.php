@@ -2,20 +2,19 @@
 
 namespace App\Modules\Warehouse\Application\Services;
 
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\WarehouseNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseRepository;
-use Illuminate\Database\Eloquent\Model;
 
 class ShowWarehouseService
 {
     public function __construct(
-        protected WarehouseRepository $repository,
+        protected WarehouseRepositoryInterface $repository,
     ) {}
 
     /**
      * @throws WarehouseNotFoundException
      */
-    public function handle(int $id): Model
+    public function handle(int $id): object
     {
         $warehouse = $this->repository->findById($id);
 

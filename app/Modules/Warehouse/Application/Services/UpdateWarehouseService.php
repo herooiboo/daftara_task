@@ -3,20 +3,19 @@
 namespace App\Modules\Warehouse\Application\Services;
 
 use App\Modules\Warehouse\Application\DTOs\UpdateWarehouseDTO;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\WarehouseNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseRepository;
-use Illuminate\Database\Eloquent\Model;
 
 class UpdateWarehouseService
 {
     public function __construct(
-        protected WarehouseRepository $repository,
+        protected WarehouseRepositoryInterface $repository,
     ) {}
 
     /**
      * @throws WarehouseNotFoundException
      */
-    public function handle(UpdateWarehouseDTO $dto): Model
+    public function handle(UpdateWarehouseDTO $dto): object
     {
         $warehouse = $this->repository->updateWarehouse($dto);
 

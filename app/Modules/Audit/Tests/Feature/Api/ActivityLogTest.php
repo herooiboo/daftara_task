@@ -70,7 +70,7 @@ class ActivityLogTest extends TestCase
         // Create warehouse activity
         Warehouse::factory()->create();
 
-        $response = $this->getJson('/api/activity-logs?subject_type=' . Warehouse::class);
+        $response = $this->getJson('/api/v1/audit/activity-logs?subject_type=' . Warehouse::class);
 
         $response->assertStatus(200);
         $data = $response->json('data');
@@ -87,7 +87,7 @@ class ActivityLogTest extends TestCase
         // Create warehouse activity
         Warehouse::factory()->create();
 
-        $response = $this->getJson('/api/activity-logs?causer_id=' . $user->id);
+        $response = $this->getJson('/api/v1/audit/activity-logs?causer_id=' . $user->id);
 
         $response->assertStatus(200);
     }

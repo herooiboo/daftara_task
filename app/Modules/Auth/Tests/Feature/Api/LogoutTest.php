@@ -29,7 +29,7 @@ class LogoutTest extends TestCase
 
     public function test_unauthenticated_user_cannot_logout(): void
     {
-        $response = $this->postJson('/api/logout');
+        $response = $this->postJson('/api/v1/auth/logout');
 
         $response->assertStatus(401);
     }

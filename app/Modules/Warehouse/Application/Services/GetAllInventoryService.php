@@ -7,12 +7,12 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMax;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMin;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasSku;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasWarehouseId;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseInventoryItemRepository;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
 
 class GetAllInventoryService
 {
     public function __construct(
-        protected WarehouseInventoryItemRepository $repository,
+        protected WarehouseInventoryItemRepositoryInterface $repository,
     ) {}
 
     public function handle(

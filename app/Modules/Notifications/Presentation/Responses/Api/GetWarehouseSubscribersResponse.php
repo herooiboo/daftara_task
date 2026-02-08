@@ -2,7 +2,7 @@
 
 namespace App\Modules\Notifications\Presentation\Responses\Api;
 
-use App\Modules\Notifications\Presentation\Resources\SubscriptionResource;
+use App\Modules\Notifications\Presentation\Resources\SubscriptionEntityResource;
 use Dust\Base\Response;
 
 class GetWarehouseSubscribersResponse extends Response
@@ -11,7 +11,7 @@ class GetWarehouseSubscribersResponse extends Response
     {
         return response()->json([
             'success' => true,
-            'data' => SubscriptionResource::collection($resource),
+            'data' => SubscriptionEntityResource::collection($resource),
         ]);
     }
 }

@@ -6,6 +6,10 @@ use App\Modules\Auth\Presentation\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Resource for WarehouseNotificationSubscription Eloquent models.
+ * Use SubscriptionEntityResource for domain entities.
+ */
 class SubscriptionResource extends JsonResource
 {
     public function toArray(Request $request): array

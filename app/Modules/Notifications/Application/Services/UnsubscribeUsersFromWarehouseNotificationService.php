@@ -3,12 +3,12 @@
 namespace App\Modules\Notifications\Application\Services;
 
 use App\Modules\Notifications\Application\DTOs\UnsubscribeUsersFromWarehouseNotificationDTO;
-use App\Modules\Notifications\Infrastructure\Repositories\WarehouseNotificationSubscriptionRepository;
+use App\Modules\Notifications\Domain\Contracts\Repositories\WarehouseNotificationSubscriptionRepositoryInterface;
 
 class UnsubscribeUsersFromWarehouseNotificationService
 {
     public function __construct(
-        protected WarehouseNotificationSubscriptionRepository $repository,
+        protected WarehouseNotificationSubscriptionRepositoryInterface $repository,
     ) {}
 
     public function handle(UnsubscribeUsersFromWarehouseNotificationDTO $dto): int

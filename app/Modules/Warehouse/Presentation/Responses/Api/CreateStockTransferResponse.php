@@ -5,7 +5,7 @@ namespace App\Modules\Warehouse\Presentation\Responses\Api;
 use App\Modules\Notifications\Infrastructure\Events\LowStockDetected;
 use App\Modules\Warehouse\Application\DTOs\CreateStockTransferResponseDTO;
 use App\Modules\Warehouse\Domain\Exceptions\InsufficientStockException;
-use App\Modules\Warehouse\Presentation\Resources\StockTransferResource;
+use App\Modules\Warehouse\Presentation\Resources\StockTransferEntityResource;
 use Dust\Base\Response;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -20,7 +20,7 @@ class CreateStockTransferResponse extends Response
     {
         return response()->json([
             'success' => true,
-            'data' => new StockTransferResource($resource->transfer),
+            'data' => new StockTransferEntityResource($resource->transfer),
         ], SymfonyResponse::HTTP_CREATED);
     }
 

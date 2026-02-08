@@ -7,16 +7,16 @@ use App\Modules\Warehouse\Domain\Contracts\Filters\HasName;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMax;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasPriceMin;
 use App\Modules\Warehouse\Domain\Contracts\Filters\HasSku;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseInventoryItemRepositoryInterface;
+use App\Modules\Warehouse\Domain\Contracts\Repositories\WarehouseRepositoryInterface;
 use App\Modules\Warehouse\Domain\Exceptions\WarehouseNotFoundException;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseInventoryItemRepository;
-use App\Modules\Warehouse\Infrastructure\Repositories\WarehouseRepository;
 use Illuminate\Support\Facades\Cache;
 
 class GetWarehouseInventoryService
 {
     public function __construct(
-        protected WarehouseInventoryItemRepository $repository,
-        protected WarehouseRepository $warehouseRepository,
+        protected WarehouseInventoryItemRepositoryInterface $repository,
+        protected WarehouseRepositoryInterface $warehouseRepository,
     ) {}
 
     /**
