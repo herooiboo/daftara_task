@@ -1,8 +1,8 @@
 # API Documentation
 
-Base URL: `http://localhost:8000/api`
+Base URL: `http://localhost:8000/api/v1`
 
-> Interactive Swagger/OpenAPI documentation is also available at `/docs` when the server is running.
+> Interactive Swagger/OpenAPI documentation is also available at `/docs/api` when the server is running.
 
 ## Authentication
 
@@ -42,7 +42,7 @@ All responses follow this structure:
 
 ## Auth
 
-### POST /api/register
+### POST /api/v1/auth/register
 
 Register a new user account. The user is automatically assigned the `staff` role.
 
@@ -80,7 +80,7 @@ Register a new user account. The user is automatically assigned the `staff` role
 
 ---
 
-### POST /api/login
+### POST /api/v1/auth/login
 
 Authenticate and receive an API token.
 
@@ -117,7 +117,7 @@ Authenticate and receive an API token.
 
 ---
 
-### POST /api/logout
+### POST /api/v1/auth/logout
 
 Revoke the current API token. **Requires authentication.**
 
@@ -138,7 +138,7 @@ Authorization: Bearer {token}
 
 ---
 
-### GET /api/me
+### GET /api/v1/auth/me
 
 Get the authenticated user's profile. **Requires authentication.**
 
@@ -167,7 +167,7 @@ Authorization: Bearer {token}
 
 All warehouse endpoints require `auth:sanctum`.
 
-### GET /api/warehouses
+### GET /api/v1/warehouse/warehouses
 
 List all warehouses. **Permission:** `view-warehouses`
 
@@ -194,7 +194,7 @@ List all warehouses. **Permission:** `view-warehouses`
 
 ---
 
-### POST /api/warehouses
+### POST /api/v1/warehouse/warehouses
 
 Create a new warehouse. **Permission:** `create-warehouses`
 
@@ -228,7 +228,7 @@ Create a new warehouse. **Permission:** `create-warehouses`
 
 ---
 
-### GET /api/warehouses/{id}
+### GET /api/v1/warehouse/warehouses/{id}
 
 Get a single warehouse. **Permission:** `view-warehouses`
 
@@ -236,7 +236,7 @@ Get a single warehouse. **Permission:** `view-warehouses`
 
 ---
 
-### PUT /api/warehouses/{id}
+### PUT /api/v1/warehouse/warehouses/{id}
 
 Update a warehouse. **Permission:** `update-warehouses`
 
@@ -252,7 +252,7 @@ Update a warehouse. **Permission:** `update-warehouses`
 
 ---
 
-### DELETE /api/warehouses/{id}
+### DELETE /api/v1/warehouse/warehouses/{id}
 
 Delete a warehouse. **Permission:** `delete-warehouses`
 
@@ -272,7 +272,7 @@ Delete a warehouse. **Permission:** `delete-warehouses`
 
 All inventory item endpoints require `auth:sanctum`.
 
-### GET /api/inventory-items
+### GET /api/v1/warehouse/inventory-items
 
 List all inventory items. **Permission:** `view-inventory-items`
 
@@ -296,7 +296,7 @@ List all inventory items. **Permission:** `view-inventory-items`
 
 ---
 
-### POST /api/inventory-items
+### POST /api/v1/warehouse/inventory-items
 
 Create a new inventory item. **Permission:** `create-inventory-items`
 
@@ -322,19 +322,19 @@ Create a new inventory item. **Permission:** `create-inventory-items`
 
 ---
 
-### GET /api/inventory-items/{id}
+### GET /api/v1/warehouse/inventory-items/{id}
 
 Get a single inventory item. **Permission:** `view-inventory-items`
 
 ---
 
-### PUT /api/inventory-items/{id}
+### PUT /api/v1/warehouse/inventory-items/{id}
 
 Update an inventory item. **Permission:** `update-inventory-items`
 
 ---
 
-### DELETE /api/inventory-items/{id}
+### DELETE /api/v1/warehouse/inventory-items/{id}
 
 Delete an inventory item. **Permission:** `delete-inventory-items`
 
@@ -342,7 +342,7 @@ Delete an inventory item. **Permission:** `delete-inventory-items`
 
 ## Inventory (Stock)
 
-### GET /api/inventory
+### GET /api/v1/warehouse/inventory
 
 Get all stock levels across all warehouses. Paginated and filterable. **Permission:** `view-inventory`
 
@@ -380,7 +380,7 @@ Get all stock levels across all warehouses. Paginated and filterable. **Permissi
 
 ---
 
-### GET /api/warehouses/{id}/inventory
+### GET /api/v1/warehouse/warehouses/{id}/inventory
 
 Get inventory for a specific warehouse. Cached for 60 minutes. **Permission:** `view-inventory`
 
@@ -392,7 +392,26 @@ Cache is automatically invalidated when stock levels change.
 
 ## Stock Transfers
 
-### POST /api/stock-transfers
+### GET /api/v1/warehouse/stock-transfers
+
+List all stock transfers with optional filters. **Permission:** `view-stock-transfers`
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| inventory_id | integer | Filter by inventory item ID |
+| base_warehouse_id | integer | Filter by source warehouse ID |
+| target_warehouse_id | integer | Filter by target warehouse ID |
+| created_by | integer | Filter by user who created the transfer |
+| date_from | date | Filter from date (Y-m-d) |
+| date_to | date | Filter to date (Y-m-d) |
+| page | integer | Page number (default: 1) |
+
+**Response (200):** Paginated list of stock transfers.
+
+---
+
+### POST /api/v1/warehouse/stock-transfers
 
 Transfer stock from one warehouse to another. **Permission:** `create-stock-transfers`
 
@@ -440,7 +459,7 @@ This operation is atomic (all-or-nothing within a database transaction). If the 
 
 Manage which users receive low-stock email notifications for a warehouse. All endpoints require `manage-warehouse-subscriptions` permission.
 
-### GET /api/warehouses/{id}/subscribers
+### GET /api/v1/notifications/warehouses/{id}/notification-subscribers
 
 List all users subscribed to a warehouse's notifications.
 
@@ -466,33 +485,62 @@ List all users subscribed to a warehouse's notifications.
 
 ---
 
-### POST /api/warehouses/{id}/subscribers
+### POST /api/v1/notifications/warehouses/{id}/notification-subscribers
 
-Subscribe a user to a warehouse's low-stock notifications.
+Subscribe multiple users to a warehouse's low-stock notifications.
 
 **Body:**
 ```json
 {
-  "user_id": 2
+  "user_ids": [2, 3, 4]
 }
 ```
 
-**Response (201):** Subscription object.
+**Validation:**
+| Field | Rules |
+|-------|-------|
+| user_ids | required, array, min:1 |
+| user_ids.* | required, integer, exists:users,id |
 
-**Error (409):** User is already subscribed.
+**Response (201):**
+```json
+{
+  "success": true,
+  "data": {
+    "subscribed_count": 3,
+    "subscriptions": [...]
+  }
+}
+```
+
+**Error (409):** One or more users are already subscribed.
 
 ---
 
-### DELETE /api/warehouses/{id}/subscribers/{userId}
+### DELETE /api/v1/notifications/warehouses/{id}/notification-subscribers
 
-Unsubscribe a user from a warehouse's notifications.
+Unsubscribe multiple users from a warehouse's notifications.
+
+**Body:**
+```json
+{
+  "user_ids": [2, 3]
+}
+```
+
+**Validation:**
+| Field | Rules |
+|-------|-------|
+| user_ids | required, array, min:1 |
+| user_ids.* | required, integer, exists:users,id |
 
 **Response (200):**
 ```json
 {
   "success": true,
   "data": {
-    "message": "Unsubscribed successfully."
+    "unsubscribed_count": 2,
+    "message": "Successfully unsubscribed 2 user(s) from warehouse notifications."
   }
 }
 ```
@@ -501,7 +549,7 @@ Unsubscribe a user from a warehouse's notifications.
 
 ## Audit (Activity Logs)
 
-### GET /api/activity-logs
+### GET /api/v1/audit/activity-logs
 
 Retrieve activity logs with optional filters. **Permission:** `view-activity-logs`
 

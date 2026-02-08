@@ -14,7 +14,7 @@ A RESTful API for managing inventory across multiple warehouses, built with **La
 - **Role-Based Access Control** - 3 roles (superadmin, manager, staff) with 12 granular permissions
 - **API Authentication** - Laravel Sanctum token-based authentication
 - **Caching** - Warehouse inventory cached for 60 minutes, auto-invalidated on changes
-- **API Documentation** - Auto-generated Swagger/OpenAPI docs via Scribe
+- **API Documentation** - Auto-generated Swagger/OpenAPI docs via Scramble
 
 ## Tech Stack
 
@@ -53,31 +53,32 @@ After installation, 3 demo users are created:
 | Warehouse Manager | manager@daftara.com | password | manager |
 | Staff Member | staff@daftara.com | password | staff |
 
-## API Endpoints (21 total)
+## API Endpoints (22 total)
 
 | Group | Method | URI | Permission |
 |-------|--------|-----|------------|
-| **Auth** | POST | `/api/register` | Public |
-| | POST | `/api/login` | Public |
-| | POST | `/api/logout` | Authenticated |
-| | GET | `/api/me` | Authenticated |
-| **Warehouses** | GET | `/api/warehouses` | `view-warehouses` |
-| | POST | `/api/warehouses` | `create-warehouses` |
-| | GET | `/api/warehouses/{id}` | `view-warehouses` |
-| | PUT | `/api/warehouses/{id}` | `update-warehouses` |
-| | DELETE | `/api/warehouses/{id}` | `delete-warehouses` |
-| **Inventory Items** | GET | `/api/inventory-items` | `view-inventory-items` |
-| | POST | `/api/inventory-items` | `create-inventory-items` |
-| | GET | `/api/inventory-items/{id}` | `view-inventory-items` |
-| | PUT | `/api/inventory-items/{id}` | `update-inventory-items` |
-| | DELETE | `/api/inventory-items/{id}` | `delete-inventory-items` |
-| **Inventory** | GET | `/api/inventory` | `view-inventory` |
-| | GET | `/api/warehouses/{id}/inventory` | `view-inventory` |
-| **Stock Transfers** | POST | `/api/stock-transfers` | `create-stock-transfers` |
-| **Subscriptions** | GET | `/api/warehouses/{id}/subscribers` | `manage-warehouse-subscriptions` |
-| | POST | `/api/warehouses/{id}/subscribers` | `manage-warehouse-subscriptions` |
-| | DELETE | `/api/warehouses/{id}/subscribers/{userId}` | `manage-warehouse-subscriptions` |
-| **Audit** | GET | `/api/activity-logs` | `view-activity-logs` |
+| **Auth** | POST | `/api/v1/auth/register` | Public |
+| | POST | `/api/v1/auth/login` | Public |
+| | POST | `/api/v1/auth/logout` | Authenticated |
+| | GET | `/api/v1/auth/me` | Authenticated |
+| **Warehouses** | GET | `/api/v1/warehouse/warehouses` | `view-warehouses` |
+| | POST | `/api/v1/warehouse/warehouses` | `create-warehouses` |
+| | GET | `/api/v1/warehouse/warehouses/{id}` | `view-warehouses` |
+| | PUT | `/api/v1/warehouse/warehouses/{id}` | `update-warehouses` |
+| | DELETE | `/api/v1/warehouse/warehouses/{id}` | `delete-warehouses` |
+| **Inventory Items** | GET | `/api/v1/warehouse/inventory-items` | `view-inventory-items` |
+| | POST | `/api/v1/warehouse/inventory-items` | `create-inventory-items` |
+| | GET | `/api/v1/warehouse/inventory-items/{id}` | `view-inventory-items` |
+| | PUT | `/api/v1/warehouse/inventory-items/{id}` | `update-inventory-items` |
+| | DELETE | `/api/v1/warehouse/inventory-items/{id}` | `delete-inventory-items` |
+| **Inventory** | GET | `/api/v1/warehouse/inventory` | `view-inventory` |
+| | GET | `/api/v1/warehouse/warehouses/{id}/inventory` | `view-inventory` |
+| **Stock Transfers** | GET | `/api/v1/warehouse/stock-transfers` | `view-stock-transfers` |
+| | POST | `/api/v1/warehouse/stock-transfers` | `create-stock-transfers` |
+| **Subscriptions** | GET | `/api/v1/notifications/warehouses/{id}/notification-subscribers` | `manage-warehouse-subscriptions` |
+| | POST | `/api/v1/notifications/warehouses/{id}/notification-subscribers` | `manage-warehouse-subscriptions` |
+| | DELETE | `/api/v1/notifications/warehouses/{id}/notification-subscribers` | `manage-warehouse-subscriptions` |
+| **Audit** | GET | `/api/v1/audit/activity-logs` | `view-activity-logs` |
 
 ## API Documentation
 

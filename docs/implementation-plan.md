@@ -36,7 +36,7 @@ A simplified RESTful API for managing inventory across multiple warehouses, buil
 | Authentication     | Laravel Sanctum (token-based)       |
 | Authorization      | `spatie/laravel-permission`         |
 | Activity Logging   | `spatie/laravel-activitylog`        |
-| API Documentation  | `knuckleswtf/scribe`               |
+| API Documentation  | `dedoc/scramble`                  |
 | Routing            | `spatie/laravel-route-attributes` (via Dust's attribute-based routing) |
 | Cache Driver       | File                                |
 | Database           | MySQL 8.0                           |
@@ -407,62 +407,63 @@ app/Modules/{Module}/
 
 ### 7.1 Auth Module
 
-| Method | URI                | Controller            | Auth | Description           |
-|--------|--------------------|-----------------------|------|-----------------------|
-| POST   | `/api/register`    | RegisterController    | No   | Register a new user   |
-| POST   | `/api/login`       | LoginController       | No   | Login, returns token  |
-| POST   | `/api/logout`      | LogoutController      | Yes  | Revoke current token  |
-| GET    | `/api/me`          | GetProfileController  | Yes  | Get authenticated user|
+| Method | URI                      | Controller            | Auth | Description           |
+|--------|--------------------------|-----------------------|------|-----------------------|
+| POST   | `/api/v1/auth/register`  | RegisterController    | No   | Register a new user   |
+| POST   | `/api/v1/auth/login`     | LoginController       | No   | Login, returns token  |
+| POST   | `/api/v1/auth/logout`    | LogoutController      | Yes  | Revoke current token  |
+| GET    | `/api/v1/auth/me`        | GetProfileController  | Yes  | Get authenticated user|
 
 ### 7.2 Warehouse Module — Warehouses
 
-| Method | URI                          | Controller                | Auth | Permission           |
-|--------|------------------------------|---------------------------|------|----------------------|
-| GET    | `/api/warehouses`            | IndexWarehouseController  | Yes  | `view-warehouses`    |
-| POST   | `/api/warehouses`            | StoreWarehouseController  | Yes  | `create-warehouses`  |
-| GET    | `/api/warehouses/{id}`       | ShowWarehouseController   | Yes  | `view-warehouses`    |
-| PUT    | `/api/warehouses/{id}`       | UpdateWarehouseController | Yes  | `update-warehouses`  |
-| DELETE | `/api/warehouses/{id}`       | DestroyWarehouseController| Yes  | `delete-warehouses`  |
+| Method | URI                                    | Controller                | Auth | Permission           |
+|--------|----------------------------------------|---------------------------|------|----------------------|
+| GET    | `/api/v1/warehouse/warehouses`         | IndexWarehouseController  | Yes  | `view-warehouses`    |
+| POST   | `/api/v1/warehouse/warehouses`         | StoreWarehouseController  | Yes  | `create-warehouses`  |
+| GET    | `/api/v1/warehouse/warehouses/{id}`    | ShowWarehouseController   | Yes  | `view-warehouses`    |
+| PUT    | `/api/v1/warehouse/warehouses/{id}`    | UpdateWarehouseController | Yes  | `update-warehouses`  |
+| DELETE | `/api/v1/warehouse/warehouses/{id}`    | DestroyWarehouseController| Yes  | `delete-warehouses`  |
 
 ### 7.3 Warehouse Module — Inventory Items
 
-| Method | URI                              | Controller                    | Auth | Permission               |
-|--------|----------------------------------|-------------------------------|------|--------------------------|
-| GET    | `/api/inventory-items`           | IndexInventoryItemController  | Yes  | `view-inventory-items`   |
-| POST   | `/api/inventory-items`           | StoreInventoryItemController  | Yes  | `create-inventory-items` |
-| GET    | `/api/inventory-items/{id}`      | ShowInventoryItemController   | Yes  | `view-inventory-items`   |
-| PUT    | `/api/inventory-items/{id}`      | UpdateInventoryItemController | Yes  | `update-inventory-items` |
-| DELETE | `/api/inventory-items/{id}`      | DestroyInventoryItemController| Yes  | `delete-inventory-items` |
+| Method | URI                                    | Controller                    | Auth | Permission               |
+|--------|----------------------------------------|-------------------------------|------|--------------------------|
+| GET    | `/api/v1/warehouse/inventory-items`    | IndexInventoryItemController  | Yes  | `view-inventory-items`   |
+| POST   | `/api/v1/warehouse/inventory-items`    | StoreInventoryItemController  | Yes  | `create-inventory-items` |
+| GET    | `/api/v1/warehouse/inventory-items/{id}` | ShowInventoryItemController   | Yes  | `view-inventory-items`   |
+| PUT    | `/api/v1/warehouse/inventory-items/{id}` | UpdateInventoryItemController | Yes  | `update-inventory-items` |
+| DELETE | `/api/v1/warehouse/inventory-items/{id}` | DestroyInventoryItemController| Yes  | `delete-inventory-items` |
 
 ### 7.4 Warehouse Module — Inventory (Stock)
 
-| Method | URI                                    | Controller                    | Auth | Permission              |
-|--------|----------------------------------------|-------------------------------|------|-------------------------|
-| GET    | `/api/inventory`                       | GetAllInventoryController     | Yes  | `view-inventory`        |
-| GET    | `/api/warehouses/{id}/inventory`       | GetWarehouseInventoryController| Yes | `view-inventory`        |
+| Method | URI                                          | Controller                    | Auth | Permission              |
+|--------|----------------------------------------------|-------------------------------|------|-------------------------|
+| GET    | `/api/v1/warehouse/inventory`                | GetAllInventoryController     | Yes  | `view-inventory`        |
+| GET    | `/api/v1/warehouse/warehouses/{id}/inventory` | GetWarehouseInventoryController| Yes | `view-inventory`        |
 
-- `GET /api/inventory` — paginated, filterable (warehouse_id, name, SKU, price_min, price_max) via Pipeline pattern
-- `GET /api/warehouses/{id}/inventory` — cached via file driver, invalidated by observer
+- `GET /api/v1/warehouse/inventory` — paginated, filterable (warehouse_id, name, SKU, price_min, price_max) via Pipeline pattern
+- `GET /api/v1/warehouse/warehouses/{id}/inventory` — cached via file driver, invalidated by observer
 
 ### 7.5 Warehouse Module — Stock Transfers
 
-| Method | URI                      | Controller                   | Auth | Permission              |
-|--------|--------------------------|------------------------------|------|-------------------------|
-| POST   | `/api/stock-transfers`   | CreateStockTransferController| Yes  | `create-stock-transfers`|
+| Method | URI                                | Controller                   | Auth | Permission              |
+|--------|------------------------------------|------------------------------|------|-------------------------|
+| GET    | `/api/v1/warehouse/stock-transfers` | IndexStockTransferController | Yes  | `view-stock-transfers`  |
+| POST   | `/api/v1/warehouse/stock-transfers` | CreateStockTransferController| Yes  | `create-stock-transfers`|
 
 ### 7.6 Notifications Module — Subscriptions
 
-| Method | URI                                          | Controller                          | Auth | Permission                      |
-|--------|----------------------------------------------|-------------------------------------|------|---------------------------------|
-| POST   | `/api/warehouses/{id}/subscribers`           | SubscribeUserToWarehouseController  | Yes  | `manage-warehouse-subscriptions`|
-| DELETE | `/api/warehouses/{id}/subscribers/{userId}`  | UnsubscribeUserFromWarehouseController | Yes | `manage-warehouse-subscriptions`|
-| GET    | `/api/warehouses/{id}/subscribers`           | GetWarehouseSubscribersController   | Yes  | `manage-warehouse-subscriptions`|
+| Method | URI                                                          | Controller                          | Auth | Permission                      |
+|--------|--------------------------------------------------------------|-------------------------------------|------|---------------------------------|
+| GET    | `/api/v1/notifications/warehouses/{id}/notification-subscribers` | GetWarehouseSubscribersController   | Yes  | `manage-warehouse-subscriptions`|
+| POST   | `/api/v1/notifications/warehouses/{id}/notification-subscribers` | SubscribeUsersToWarehouseNotificationController  | Yes  | `manage-warehouse-subscriptions`|
+| DELETE | `/api/v1/notifications/warehouses/{id}/notification-subscribers`  | UnsubscribeUsersFromWarehouseNotificationController | Yes | `manage-warehouse-subscriptions`|
 
 ### 7.7 Audit Module
 
-| Method | URI                  | Controller               | Auth | Permission         |
-|--------|----------------------|--------------------------|------|--------------------|
-| GET    | `/api/activity-logs` | GetActivityLogsController| Yes  | `view-activity-logs`|
+| Method | URI                          | Controller               | Auth | Permission         |
+|--------|------------------------------|--------------------------|------|--------------------|
+| GET    | `/api/v1/audit/activity-logs` | GetActivityLogsController| Yes  | `view-activity-logs`|
 
 ---
 
@@ -679,7 +680,7 @@ class WarehouseInventoryItemObserver implements WarehouseInventoryItemObserverIn
 
 - **Driver**: File
 - **TTL**: 60 minutes (standard)
-- **Scope**: `GET /api/warehouses/{id}/inventory` endpoint only
+- **Scope**: `GET /api/v1/warehouse/warehouses/{id}/inventory` endpoint only
 
 ### 10.2 Cache Key Pattern
 
@@ -850,20 +851,19 @@ daftara:install [--seed]
 8. `php artisan config:clear`
 9. `php artisan cache:clear`
 10. `php artisan route:clear`
-11. `php artisan scribe:generate`
-12. Output success message with seeded user credentials
+11. Output success message with seeded user credentials
 
 ---
 
 ## 15. API Documentation
 
-### 15.1 Scribe (Auto-generated)
+### 15.1 Scramble (Auto-generated)
 
-- Package: `knuckleswtf/scribe`
-- Generate: `php artisan scribe:generate`
-- Output: `/docs` endpoint serves interactive HTML documentation
+- Package: `dedoc/scramble`
+- Auto-generated from route attributes and FormRequest classes
+- Output: `/docs/api` endpoint serves interactive HTML documentation
 - Automatically picks up: routes, FormRequest rules, response structures, route parameters
-- Group endpoints by module using `@group` docblock annotations on controllers
+- Group endpoints by module using `@tags` docblock annotations on controllers
 
 ### 15.2 README.md
 
@@ -882,7 +882,7 @@ The project README will include:
 
 ### Phase 1: Project Setup
 1. Fresh Laravel 12 project
-2. Install packages: `cyberbugz/dust`, `spatie/laravel-permission`, `spatie/laravel-activitylog`, `laravel/sanctum`, `knuckleswtf/scribe`
+2. Install packages: `cyberbugz/dust`, `spatie/laravel-permission`, `spatie/laravel-activitylog`, `laravel/sanctum`, `dedoc/scramble`
 3. Configure Dust: modules path, guards, attribute-based routing
 4. Configure Sanctum for token-based auth
 5. Configure spatie packages
@@ -931,7 +931,7 @@ The project README will include:
 
 ### Phase 6: Finalization
 1. Create `daftara:install` Artisan command
-2. Generate Scribe documentation
+2. Scramble documentation is auto-generated (no manual generation needed)
 3. Write README.md
 4. Final test run: `php artisan test`
 5. Code cleanup and review
