@@ -130,7 +130,3 @@ php artisan test --group=audit
 
 - [Installation Guide](docs/installation-guide.md) - Detailed setup instructions
 - [API Documentation](docs/api-documentation.md) - Comprehensive API reference
-
-## License
-
-[Your License Here]
