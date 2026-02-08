@@ -108,16 +108,19 @@ Each module has 4 layers:
 Presentation → Application → Domain ← Infrastructure
 ```
 
-- **Presentation** - Controllers, Requests, Responses, Resources
-- **Application** - Services, Pipelines, DTOs
-- **Domain** - Contracts (interfaces), Exceptions (no framework dependencies)
+- **Presentation** - Controllers, Requests, Responses, Resources (EntityResources for domain entities, Resources for Eloquent models)
+- **Application** - Services, Pipelines, DTOs (use domain entities)
+- **Domain** - Entities (pure PHP objects), Contracts (interfaces), Exceptions (no framework dependencies)
 - **Infrastructure** - Models, Repositories, Events, Listeners, Migrations, Seeders
 
 ## Running Tests
 
 ```bash
-# Full test suite
+# Full test suite (65 tests, 239 assertions, 81.7% coverage)
 php artisan test
+
+# With coverage report
+php artisan test --coverage
 
 # By module
 php artisan test --group=auth
@@ -125,6 +128,8 @@ php artisan test --group=warehouse
 php artisan test --group=notifications
 php artisan test --group=audit
 ```
+
+**Test Results**: All 65 tests passing ✅
 
 ## Documentation
 

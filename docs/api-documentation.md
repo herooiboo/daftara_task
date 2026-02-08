@@ -441,15 +441,17 @@ This operation is atomic (all-or-nothing within a database transaction). If the 
   "success": true,
   "data": {
     "id": 1,
-    "inventory_item": { "id": 1, "name": "Laptop" },
-    "base_warehouse": { "id": 1, "name": "Main Warehouse" },
-    "target_warehouse": { "id": 2, "name": "North Branch" },
+    "inventory_id": 1,
+    "base_warehouse_id": 1,
+    "target_warehouse_id": 2,
     "amount": 50,
-    "created_by": { "id": 1, "name": "Super Admin" },
+    "created_by": 1,
     "created_at": "2026-02-08T00:00:00.000000Z"
   }
 }
 ```
+
+> **Note:** The response uses `StockTransferEntityResource` which returns domain entity data (no nested relationships). For full details with relationships, use the GET endpoint.
 
 **Error (422):** Insufficient stock in source warehouse.
 
@@ -508,7 +510,18 @@ Subscribe multiple users to a warehouse's low-stock notifications.
   "success": true,
   "data": {
     "subscribed_count": 3,
-    "subscriptions": [...]
+    "subscriptions": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "warehouse_id": 1
+      },
+      {
+        "id": 2,
+        "user_id": 3,
+        "warehouse_id": 1
+      }
+    ]
   }
 }
 ```

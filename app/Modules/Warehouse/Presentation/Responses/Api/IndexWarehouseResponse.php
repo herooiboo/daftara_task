@@ -9,9 +9,8 @@ class IndexWarehouseResponse extends Response
 {
     protected function createResource(mixed $resource): mixed
     {
-        return response()->json([
-            'success' => true,
-            'data' => WarehouseResource::collection($resource),
-        ]);
+
+
+        return $resource;
     }
 }

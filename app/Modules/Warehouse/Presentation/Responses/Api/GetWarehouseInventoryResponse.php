@@ -9,9 +9,6 @@ class GetWarehouseInventoryResponse extends Response
 {
     protected function createResource(mixed $resource): mixed
     {
-        return response()->json([
-            'success' => true,
-            'data' => WarehouseInventoryItemResource::collection($resource),
-        ]);
+        return $resource;
     }
 }

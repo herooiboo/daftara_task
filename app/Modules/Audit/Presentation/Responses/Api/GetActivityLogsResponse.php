@@ -9,9 +9,6 @@ class GetActivityLogsResponse extends Response
 {
     protected function createResource(mixed $resource): mixed
     {
-        return response()->json([
-            'success' => true,
-            'data' => ActivityLogResource::collection($resource),
-        ]);
+        return $resource;
     }
 }

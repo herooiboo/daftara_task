@@ -9,9 +9,6 @@ class IndexInventoryItemResponse extends Response
 {
     protected function createResource(mixed $resource): mixed
     {
-        return response()->json([
-            'success' => true,
-            'data' => InventoryItemResource::collection($resource),
-        ]);
+        return $resource;
     }
 }
